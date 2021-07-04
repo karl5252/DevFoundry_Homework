@@ -86,4 +86,14 @@ public class Unit {
     int getLoad() {
         return this.currentCargoWeight;
     }
+
+    //TEST
+    /*void simulateOverloadedCargo(Coordinates startingCoords, int maxF, int maxCW){
+        for (int i = 0; i < 1_000; i++){
+            Cargo cargo = new Cargo("container " + i, i);
+            Unit unit = new Unit(startingCoords, maxF, maxCW);
+            unit.loadCargo(cargo);
+        }
+
+    }*/
 }
