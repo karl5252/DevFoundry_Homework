@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.OrderingComparison.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +49,7 @@ public class UnitTest {
     @Test
     void newUnitHasFuelEqualToGivenValue(){
 
-        assertEquals(unit.getFuel(),2);
+        assertEquals(unit.getFuel(),maxTestFuel);
 
     }
     @Test
@@ -85,7 +86,7 @@ public class UnitTest {
         unit.move(5,2);
         int newFuelLevel = unit.getFuel();
         unit.tankUp();
-        assertThat(unit.getFuel(), greaterThan(newFuelLevel));
+        assertThat(unit.getFuel(), greaterThanOrEqualTo(newFuelLevel));
         assertThat(unit.getFuel(), lessThanOrEqualTo(maxTestFuel));
 
     }
@@ -116,6 +117,29 @@ public class UnitTest {
             assertThat(testUnit.getLoad(),lessThan(10));
 
         }
+        @Test
+        void ifCargoExceedsMaxCargoThenISExceptionIsThrown(){
+        assertThrows(IllegalStateException.class,() -> unit.loadCargo(new Cargo("shitload of stones", 1)));
+        }
+        @Test
+        void ifCVargoIsRemovedLoadChanges(){
+            Unit unit = new Unit(startingCoords,0,10);
+            Cargo cargo = new Cargo("bag of stones", 2);
+            unit.loadCargo(cargo);
+
+            assertThat(unit.getLoad(), greaterThanOrEqualTo(2));
+            unit.unloadCargo(cargo);
+            assertEquals(unit.getLoad(), 0);
+        }
+
+    @Test
+    void ifCargoIsCleanedThenEqualZero(){
+        Unit unit = new Unit(startingCoords,0,2);
+        unit.loadCargo(new Cargo("bag of feathers", 2));
+        unit.unloadAllCargo();
+        assertEquals(unit.getLoad(),0);
+
+    }
 
     }
 
